@@ -26,6 +26,11 @@
 	<name>activemq</name>
 
 	<properties>
+		<messaging.version>1.1-SNAPSHOT</messaging.version>
+		<logger.version>1.0.0</logger.version>
+		<activemq-client.version>5.15.10</activemq-client.version>
+		<activemq-openwire-legacy.version>5.9.0</activemq-openwire-legacy.version>
+		<javax.jms-api.version>2.0.1</javax.jms-api.version>
 	</properties>
 
 	<scm>
@@ -41,6 +46,46 @@
 			<artifactId>testng</artifactId>
 			<version>${testng.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>messaging</artifactId>
+			<version>${messaging.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>logger</artifactId>
+			<version>${logger.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-client</artifactId>
+		    <version>${activemq-client.version}</version>
+		    			<exclusions>
+<!-- 				<exclusion> -->
+<!-- 		          <groupId>javax.jms</groupId> -->
+<!-- 		          <artifactId>jms</artifactId> -->
+<!-- 		        </exclusion> -->
+
+				<exclusion>
+		          <groupId>org.apache.geronimo.specs</groupId>
+		          <artifactId>geronimo-jms_1.1_spec</artifactId>
+		        </exclusion>
+			</exclusions>
+
+<!-- 			</exclusions> -->
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-openwire-legacy</artifactId>
+		    <version>${activemq-openwire-legacy.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.jms</groupId>
+		    <artifactId>javax.jms-api</artifactId>
+		    <version>${javax.jms-api.version}</version>
 		</dependency>
 	</dependencies>
 </project>
