@@ -20,12 +20,21 @@
 package se.uu.ub.cora.activemq;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
+
+import javax.jms.Connection;
+import javax.jms.MessageConsumer;
+import javax.jms.Topic;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.activemq.spy.ActiveMQConnectionFactorySpy;
+import se.uu.ub.cora.activemq.spy.ActiveMqConnectionSpy;
+import se.uu.ub.cora.activemq.spy.ActiveMqConsumerSpy;
+import se.uu.ub.cora.activemq.spy.ActiveMqSessionSpy;
 import se.uu.ub.cora.messaging.JmsMessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessageListener;
 
@@ -34,13 +43,14 @@ public class ActiveMqTopicListenerTest {
 	private ActiveMQConnectionFactorySpy connectionFactory;
 	private JmsMessageRoutingInfo routingInfo;
 	private ActiveMqMTopicListener listener;
+	private MessageReceiverSpy messageReceiver;
 
 	@BeforeMethod
 	public void beforeMethod() {
 
 		String hostname = "dev-diva-drafts";
 		String port = "61617";
-		String routingKey = "alvin.updates.#";
+		String routingKey = "diva.updates.#";
 		String username = "admin";
 		String password = "admin";
 
@@ -48,6 +58,7 @@ public class ActiveMqTopicListenerTest {
 		connectionFactory = new ActiveMQConnectionFactorySpy();
 		listener = ActiveMqMTopicListener
 				.usingActiveMQConnectionFactoryAndRoutingInfo(connectionFactory, routingInfo);
+		messageReceiver = new MessageReceiverSpy();
 	}
 
 	@Test
@@ -57,15 +68,9 @@ public class ActiveMqTopicListenerTest {
 		assertSame(listener.getRoutingInfo(), routingInfo);
 	}
 
-	// @Test
-	// public void testListnerCreatesConnection() throws Exception {
-	// assertEquals(connectionFactory.createdConnections.size(), 0);
-	// listener.listen(null);
-	// }
-
 	@Test
 	public void testSetupConnectionFactoryOnListen() throws Exception {
-		listener.listen(null);
+		listener.listen(messageReceiver);
 
 		assertEquals(connectionFactory.brokerURL,
 				"tcp://" + routingInfo.hostname + ":" + routingInfo.port);
@@ -73,4 +78,44 @@ public class ActiveMqTopicListenerTest {
 		assertEquals(connectionFactory.password, routingInfo.password);
 
 	}
+
+	@Test
+	public void testListnerCreatesConnectionAndStarted() throws Exception {
+		assertEquals(connectionFactory.createdConnections.size(), 0);
+		listener.listen(messageReceiver);
+		assertEquals(connectionFactory.createdConnections.size(), 1);
+		assertTrue(connectionFactory.createdConnections.get(0) instanceof Connection);
+		assertTrue(connectionFactory.createdConnections.get(0).hasBeenStarted);
+	}
+
+	@Test
+	public void testListenerCreatsSession() throws Exception {
+		listener.listen(messageReceiver);
+		ActiveMqConnectionSpy connection = connectionFactory.createdConnections.get(0);
+		assertEquals(connection.createdSession.size(), 1);
+
+		ActiveMqSessionSpy session = connection.createdSession.get(0);
+
+		assertEquals(session.getTransacted(), false);
+		assertEquals(session.getAcknowledgeMode(), 1);
+		assertTrue(session.destination instanceof Topic);
+		assertEquals(session.destination.getTopicName(), routingInfo.routingKey);
+		assertEquals(session.createdConsumer.size(), 1);
+		assertTrue(session.createdConsumer.get(0) instanceof Topic);
+		assertTrue(session.consumer instanceof MessageConsumer);
+	}
+
+	@Test
+	public void testListenOneMessage() throws Exception {
+		listener.listen(messageReceiver);
+		ActiveMqConnectionSpy connection = connectionFactory.createdConnections.get(0);
+		ActiveMqSessionSpy session = connection.createdSession.get(0);
+		ActiveMqConsumerSpy consumer = session.consumer;
+
+		assertTrue(consumer.receiveIsCalled);
+		// assertTrue(consumer.messageReceived instanceof TextMessage);
+		assertNotNull(messageReceiver.message);
+		assertEquals(messageReceiver.message, "Text from TextMessageSpy");
+	}
+
 }

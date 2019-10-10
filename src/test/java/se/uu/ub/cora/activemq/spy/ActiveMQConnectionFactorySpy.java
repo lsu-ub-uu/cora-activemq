@@ -16,21 +16,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.activemq;
+package se.uu.ub.cora.activemq.spy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.Connection;
+import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 //public class ActiveMQConnectionFactorySpy implements ConnectionFactory {
 public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 
-	public List<Connection> createdConnections;
-	String brokerURL = null;
-	String userName = null;
-	String password = null;
+	public List<ActiveMqConnectionSpy> createdConnections = new ArrayList<>();
+	public String brokerURL = null;
+	public String userName = null;
+	public String password = null;
 
 	@Override
 	public void setBrokerURL(String brokerURL) {
@@ -45,5 +47,12 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 	@Override
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public Connection createConnection() throws JMSException {
+		ActiveMqConnectionSpy activeMqConnectionSpy = new ActiveMqConnectionSpy();
+		createdConnections.add(activeMqConnectionSpy);
+		return activeMqConnectionSpy;
 	}
 }

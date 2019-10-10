@@ -18,6 +18,13 @@
  */
 package se.uu.ub.cora.activemq;
 
+import javax.jms.Connection;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import se.uu.ub.cora.messaging.JmsMessageRoutingInfo;
@@ -46,6 +53,18 @@ public class ActiveMqMTopicListener implements MessageListener {
 		connectionFactory.setBrokerURL("tcp://" + routingInfo.hostname + ":" + routingInfo.port);
 		connectionFactory.setUserName(routingInfo.username);
 		connectionFactory.setPassword(routingInfo.password);
+		try {
+			Connection connection = connectionFactory.createConnection();
+			connection.start();
+			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			Destination destination = session.createTopic(routingInfo.routingKey);
+			MessageConsumer consumer = session.createConsumer(destination);
+			TextMessage message = (TextMessage) consumer.receive();
+			messageReceiver.receiveMessage(null, message.getText());
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	ActiveMQConnectionFactory getConnectionFactory() {
