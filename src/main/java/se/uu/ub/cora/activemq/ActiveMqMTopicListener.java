@@ -50,6 +50,7 @@ public class ActiveMqMTopicListener implements MessageListener {
 
 	@Override
 	public void listen(MessageReceiver messageReceiver) {
+
 		connectionFactory.setBrokerURL("tcp://" + routingInfo.hostname + ":" + routingInfo.port);
 		connectionFactory.setUserName(routingInfo.username);
 		connectionFactory.setPassword(routingInfo.password);

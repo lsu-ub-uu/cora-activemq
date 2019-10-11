@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>se.uu.ub.cora</groupId>
 		<artifactId>cora-parent</artifactId>
-		<version>0.9.0</version>
+		<version>0.10-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>activemq</artifactId>
@@ -63,16 +63,16 @@
 		    <groupId>org.apache.activemq</groupId>
 		    <artifactId>activemq-client</artifactId>
 		    <version>${activemq-client.version}</version>
-		    			<exclusions>
-<!-- 				<exclusion> -->
-<!-- 		          <groupId>javax.jms</groupId> -->
-<!-- 		          <artifactId>jms</artifactId> -->
-<!-- 		        </exclusion> -->
+   			<exclusions>
 
 				<exclusion>
 		          <groupId>org.apache.geronimo.specs</groupId>
 		          <artifactId>geronimo-jms_1.1_spec</artifactId>
 		        </exclusion>
+<!-- 				<exclusion> -->
+<!-- 		          <groupId>org.apache.geronimo.specs</groupId> -->
+<!-- 		          <artifactId>geronimo-j2ee-management_1.1_spec</artifactId> -->
+<!-- 		        </exclusion> -->
 			</exclusions>
 
 <!-- 			</exclusions> -->
