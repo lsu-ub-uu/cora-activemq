@@ -18,13 +18,17 @@
  */
 package se.uu.ub.cora.activemq.spy;
 
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
 public class TextMessageSpy implements TextMessage {
+
+	public Map<String, Object> properties;
 
 	@Override
 	public String getJMSMessageID() throws JMSException {
@@ -226,8 +230,7 @@ public class TextMessageSpy implements TextMessage {
 
 	@Override
 	public String getStringProperty(String name) throws JMSException {
-		// TODO Auto-generated method stub
-		return null;
+		return (String) properties.get(name);
 	}
 
 	@Override
@@ -238,8 +241,7 @@ public class TextMessageSpy implements TextMessage {
 
 	@Override
 	public Enumeration getPropertyNames() throws JMSException {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.enumeration(properties.keySet());
 	}
 
 	@Override

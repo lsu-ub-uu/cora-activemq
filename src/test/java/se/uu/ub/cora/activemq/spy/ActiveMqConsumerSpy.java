@@ -1,15 +1,16 @@
 package se.uu.ub.cora.activemq.spy;
 
+import java.util.HashMap;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
-import javax.jms.TextMessage;
 
 public class ActiveMqConsumerSpy implements MessageConsumer {
 
 	public boolean receiveIsCalled = false;
-	public TextMessage messageReceived;
+	public TextMessageSpy messageReceived;
 
 	@Override
 	public String getMessageSelector() throws JMSException {
@@ -31,8 +32,12 @@ public class ActiveMqConsumerSpy implements MessageConsumer {
 
 	@Override
 	public Message receive() throws JMSException {
+		HashMap<String, Object> headers = new HashMap<>();
+		headers.put("pid", "diva2:666498");
+		headers.put("methodName", "modifyDatastreamByValue");
 		receiveIsCalled = true;
 		messageReceived = new TextMessageSpy();
+		messageReceived.properties = headers;
 		return messageReceived;
 	}
 

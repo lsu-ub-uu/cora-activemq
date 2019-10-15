@@ -19,13 +19,14 @@
 
 package se.uu.ub.cora.activemq;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import se.uu.ub.cora.messaging.MessageReceiver;
 
 public class MessageReceiverSpy implements MessageReceiver {
 
-	public Map<String, Object> headers;
+	public Map<String, Object> headers = new HashMap<String, Object>();
 	public String message;
 
 	@Override

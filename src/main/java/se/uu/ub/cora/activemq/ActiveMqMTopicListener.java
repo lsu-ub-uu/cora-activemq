@@ -18,6 +18,10 @@
  */
 package se.uu.ub.cora.activemq;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -50,22 +54,39 @@ public class ActiveMqMTopicListener implements MessageListener {
 
 	@Override
 	public void listen(MessageReceiver messageReceiver) {
+		setUpConnectionFactory();
+		tryToListenForMessages(messageReceiver);
+	}
 
+	private void setUpConnectionFactory() {
 		connectionFactory.setBrokerURL("tcp://" + routingInfo.hostname + ":" + routingInfo.port);
 		connectionFactory.setUserName(routingInfo.username);
 		connectionFactory.setPassword(routingInfo.password);
-		try {
-			Connection connection = connectionFactory.createConnection();
+	}
+
+	private void tryToListenForMessages(MessageReceiver messageReceiver) {
+		try (Connection connection = connectionFactory.createConnection();) {
 			connection.start();
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			Destination destination = session.createTopic(routingInfo.routingKey);
 			MessageConsumer consumer = session.createConsumer(destination);
 			TextMessage message = (TextMessage) consumer.receive();
-			messageReceiver.receiveMessage(null, message.getText());
+			Map<String, Object> headers = addPropertiesAsHeaders(message);
+			messageReceiver.receiveMessage(headers, message.getText());
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private Map<String, Object> addPropertiesAsHeaders(TextMessage message) throws JMSException {
+		Enumeration<String> propertiesNames = message.getPropertyNames();
+		Map<String, Object> headers = new HashMap<>();
+		while (propertiesNames.hasMoreElements()) {
+			String nextElement = propertiesNames.nextElement();
+			headers.put(nextElement, message.getStringProperty(nextElement));
+		}
+		return headers;
 	}
 
 	ActiveMQConnectionFactory getConnectionFactory() {

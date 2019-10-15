@@ -118,4 +118,11 @@ public class ActiveMqTopicListenerTest {
 		assertEquals(messageReceiver.message, "Text from TextMessageSpy");
 	}
 
+	@Test
+	public void testListenOneMessageSendsHeaders() throws Exception {
+		listener.listen(messageReceiver);
+		assertEquals(messageReceiver.headers.size(), 2);
+		assertEquals(messageReceiver.headers.get("pid"), "diva2:666498");
+		assertEquals(messageReceiver.headers.get("methodName"), "modifyDatastreamByValue");
+	}
 }
