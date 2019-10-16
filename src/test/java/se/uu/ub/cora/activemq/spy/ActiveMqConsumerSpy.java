@@ -40,8 +40,6 @@ public class ActiveMqConsumerSpy implements MessageConsumer {
 		messageReceived = new TextMessageSpy();
 		messageReceived.properties = headers;
 		messageCounter++;
-		System.out.println("Counter: " + messageCounter);
-
 		if (messageCounter > 10) {
 			throw new JMSException("Too much");
 		}
