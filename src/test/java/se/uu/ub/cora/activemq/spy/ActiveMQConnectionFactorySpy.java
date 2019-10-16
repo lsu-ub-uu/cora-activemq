@@ -33,6 +33,7 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 	public String brokerURL = null;
 	public String userName = null;
 	public String password = null;
+	public boolean throwError = false;
 
 	@Override
 	public void setBrokerURL(String brokerURL) {
@@ -51,6 +52,8 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 
 	@Override
 	public Connection createConnection() throws JMSException {
+		if (throwError)
+			throw new JMSException("Error from ActiveMqTopicListenerSpy on newConnection");
 		ActiveMqConnectionSpy activeMqConnectionSpy = new ActiveMqConnectionSpy();
 		createdConnections.add(activeMqConnectionSpy);
 		return activeMqConnectionSpy;

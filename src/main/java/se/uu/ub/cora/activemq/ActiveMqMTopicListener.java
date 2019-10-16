@@ -35,6 +35,7 @@ import se.uu.ub.cora.messaging.JmsMessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessageListener;
 import se.uu.ub.cora.messaging.MessageReceiver;
 import se.uu.ub.cora.messaging.MessageRoutingInfo;
+import se.uu.ub.cora.messaging.MessagingInitializationException;
 
 public class ActiveMqMTopicListener implements MessageListener {
 
@@ -65,17 +66,28 @@ public class ActiveMqMTopicListener implements MessageListener {
 	}
 
 	private void tryToListenForMessages(MessageReceiver messageReceiver) {
-		try (Connection connection = connectionFactory.createConnection();) {
-			connection.start();
-			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			Destination destination = session.createTopic(routingInfo.routingKey);
-			MessageConsumer consumer = session.createConsumer(destination);
+		try (MessageConsumer consumer = connectToTopic();) {
+			listenForMessages(messageReceiver, consumer);
+		} catch (JMSException e) {
+			throw new MessagingInitializationException(e.getMessage());
+		}
+	}
+
+	private MessageConsumer connectToTopic() throws JMSException {
+		Connection connection = connectionFactory.createConnection();
+		connection.start();
+		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		Destination destination = session.createTopic(routingInfo.routingKey);
+		MessageConsumer consumer = session.createConsumer(destination);
+		return consumer;
+	}
+
+	private void listenForMessages(MessageReceiver messageReceiver, MessageConsumer consumer)
+			throws JMSException {
+		while (true) {
 			TextMessage message = (TextMessage) consumer.receive();
 			Map<String, Object> headers = addPropertiesAsHeaders(message);
 			messageReceiver.receiveMessage(headers, message.getText());
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 

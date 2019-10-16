@@ -37,6 +37,7 @@ import se.uu.ub.cora.activemq.spy.ActiveMqConsumerSpy;
 import se.uu.ub.cora.activemq.spy.ActiveMqSessionSpy;
 import se.uu.ub.cora.messaging.JmsMessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessageListener;
+import se.uu.ub.cora.messaging.MessagingInitializationException;
 
 public class ActiveMqTopicListenerTest {
 
@@ -70,7 +71,7 @@ public class ActiveMqTopicListenerTest {
 
 	@Test
 	public void testSetupConnectionFactoryOnListen() throws Exception {
-		listener.listen(messageReceiver);
+		tryToListen();
 
 		assertEquals(connectionFactory.brokerURL,
 				"tcp://" + routingInfo.hostname + ":" + routingInfo.port);
@@ -82,7 +83,7 @@ public class ActiveMqTopicListenerTest {
 	@Test
 	public void testListnerCreatesConnectionAndStarted() throws Exception {
 		assertEquals(connectionFactory.createdConnections.size(), 0);
-		listener.listen(messageReceiver);
+		tryToListen();
 		assertEquals(connectionFactory.createdConnections.size(), 1);
 		assertTrue(connectionFactory.createdConnections.get(0) instanceof Connection);
 		assertTrue(connectionFactory.createdConnections.get(0).hasBeenStarted);
@@ -90,7 +91,7 @@ public class ActiveMqTopicListenerTest {
 
 	@Test
 	public void testListenerCreatsSession() throws Exception {
-		listener.listen(messageReceiver);
+		tryToListen();
 		ActiveMqConnectionSpy connection = connectionFactory.createdConnections.get(0);
 		assertEquals(connection.createdSession.size(), 1);
 
@@ -107,7 +108,7 @@ public class ActiveMqTopicListenerTest {
 
 	@Test
 	public void testListenOneMessage() throws Exception {
-		listener.listen(messageReceiver);
+		tryToListen();
 		ActiveMqConnectionSpy connection = connectionFactory.createdConnections.get(0);
 		ActiveMqSessionSpy session = connection.createdSession.get(0);
 		ActiveMqConsumerSpy consumer = session.consumer;
@@ -120,9 +121,31 @@ public class ActiveMqTopicListenerTest {
 
 	@Test
 	public void testListenOneMessageSendsHeaders() throws Exception {
-		listener.listen(messageReceiver);
+		tryToListen();
 		assertEquals(messageReceiver.headers.size(), 2);
 		assertEquals(messageReceiver.headers.get("pid"), "diva2:666498");
 		assertEquals(messageReceiver.headers.get("methodName"), "modifyDatastreamByValue");
+	}
+
+	@Test(expectedExceptions = MessagingInitializationException.class, expectedExceptionsMessageRegExp = ""
+			+ "Error from ActiveMqTopicListenerSpy on newConnection")
+	public void testThrowsExceptionOnListenMessage() throws Exception {
+		connectionFactory.throwError = true;
+		listener.listen(messageReceiver);
+	}
+
+	@Test
+	public void testListenTenMessages() throws Exception {
+		tryToListen();
+		assertEquals(messageReceiver.messagesReceived, 10);
+
+	}
+
+	private void tryToListen() {
+		try {
+			listener.listen(messageReceiver);
+		} catch (Exception e) {
+			// Do nothing, in order to be able to stop infinite loop.
+		}
 	}
 }

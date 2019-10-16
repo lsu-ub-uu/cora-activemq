@@ -11,6 +11,7 @@ public class ActiveMqConsumerSpy implements MessageConsumer {
 
 	public boolean receiveIsCalled = false;
 	public TextMessageSpy messageReceived;
+	private int messageCounter = 0;
 
 	@Override
 	public String getMessageSelector() throws JMSException {
@@ -38,6 +39,12 @@ public class ActiveMqConsumerSpy implements MessageConsumer {
 		receiveIsCalled = true;
 		messageReceived = new TextMessageSpy();
 		messageReceived.properties = headers;
+		messageCounter++;
+		System.out.println("Counter: " + messageCounter);
+
+		if (messageCounter > 10) {
+			throw new JMSException("Too much");
+		}
 		return messageReceived;
 	}
 
