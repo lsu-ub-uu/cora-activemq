@@ -18,11 +18,8 @@
  */
 package se.uu.ub.cora.activemq;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.jms.Connection;
@@ -95,22 +92,23 @@ public class ActiveMqMTopicListener implements MessageListener {
 	}
 
 	private Map<String, Object> addPropertiesAsHeaders(TextMessage message) throws JMSException {
-		Enumeration<String> propertiesNames = getPropertyNames(message);
+		Enumeration<String> propertiesNames = getProperties(message);
+		return getHeaders(message, propertiesNames);
+	}
+
+	private Enumeration<String> getProperties(TextMessage message) throws JMSException {
+		Enumeration<String> propertiesNames = message.getPropertyNames();
+		return propertiesNames;
+	}
+
+	private Map<String, Object> getHeaders(TextMessage message, Enumeration<String> propertiesNames)
+			throws JMSException {
 		Map<String, Object> headers = new HashMap<>();
 		while (propertiesNames.hasMoreElements()) {
 			String nextElement = propertiesNames.nextElement();
 			headers.put(nextElement, message.getStringProperty(nextElement));
 		}
 		return headers;
-	}
-
-	private Enumeration<String> getPropertyNames(TextMessage message) throws JMSException {
-		List<String> properties = new ArrayList<>();
-
-		while (message.getPropertyNames().hasMoreElements()) {
-			properties.add((String) message.getPropertyNames().nextElement());
-		}
-		return Collections.enumeration(properties);
 	}
 
 	ActiveMQConnectionFactory getConnectionFactory() {
