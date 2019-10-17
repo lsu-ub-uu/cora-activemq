@@ -18,8 +18,9 @@
  */
 package se.uu.ub.cora.activemq;
 
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.jms.Connection;
@@ -37,6 +38,11 @@ import se.uu.ub.cora.messaging.MessageReceiver;
 import se.uu.ub.cora.messaging.MessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessagingInitializationException;
 
+/**
+ * ActiveMqMTopicListener is an implementation of {@link MessageListener} for ActiveMQ
+ *
+ */
+
 public class ActiveMqMTopicListener implements MessageListener {
 
 	public static ActiveMqMTopicListener usingActiveMQConnectionFactoryAndRoutingInfo(
@@ -46,6 +52,7 @@ public class ActiveMqMTopicListener implements MessageListener {
 
 	private ActiveMQConnectionFactory connectionFactory;
 	private JmsMessageRoutingInfo routingInfo;
+	boolean listening = true;
 
 	private ActiveMqMTopicListener(ActiveMQConnectionFactory connectionFactory,
 			JmsMessageRoutingInfo routingInfo) {
@@ -53,10 +60,39 @@ public class ActiveMqMTopicListener implements MessageListener {
 		this.routingInfo = routingInfo;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @param messageReceiver
+	 *            {@inheritDoc}
+	 */
+
 	@Override
 	public void listen(MessageReceiver messageReceiver) {
 		setUpConnectionFactory();
 		tryToListenForMessages(messageReceiver);
+	}
+
+	private void tryToListenForMessages(MessageReceiver messageReceiver) {
+
+		try (Connection connection = connectionFactory.createConnection();
+				Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);) {
+			Destination destination = session.createTopic(routingInfo.routingKey);
+			MessageConsumer consumer = session.createConsumer(destination);
+			listenForMessages(messageReceiver, connection, consumer);
+		} catch (JMSException e) {
+			throw new MessagingInitializationException(e.getMessage());
+		}
+	}
+
+	private void listenForMessages(MessageReceiver messageReceiver, Connection connection,
+			MessageConsumer consumer) throws JMSException {
+		connection.start();
+		while (listening) {
+			TextMessage message = (TextMessage) consumer.receive();
+			Map<String, Object> headers = addPropertiesAsHeaders(message);
+			messageReceiver.receiveMessage(headers, message.getText());
+		}
 	}
 
 	private void setUpConnectionFactory() {
@@ -65,48 +101,17 @@ public class ActiveMqMTopicListener implements MessageListener {
 		connectionFactory.setPassword(routingInfo.password);
 	}
 
-	private void tryToListenForMessages(MessageReceiver messageReceiver) {
-		try (MessageConsumer consumer = connectToTopic();) {
-			listenForMessages(messageReceiver, consumer);
-		} catch (JMSException e) {
-			throw new MessagingInitializationException(e.getMessage());
-		}
-	}
-
-	private MessageConsumer connectToTopic() throws JMSException {
-		Connection connection = connectionFactory.createConnection();
-		connection.start();
-		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		Destination destination = session.createTopic(routingInfo.routingKey);
-		MessageConsumer consumer = session.createConsumer(destination);
-		return consumer;
-	}
-
-	private void listenForMessages(MessageReceiver messageReceiver, MessageConsumer consumer)
-			throws JMSException {
-		while (true) {
-			TextMessage message = (TextMessage) consumer.receive();
-			Map<String, Object> headers = addPropertiesAsHeaders(message);
-			messageReceiver.receiveMessage(headers, message.getText());
-		}
-	}
-
 	private Map<String, Object> addPropertiesAsHeaders(TextMessage message) throws JMSException {
-		Enumeration<String> propertiesNames = getProperties(message);
+		@SuppressWarnings("unchecked")
+		List<String> propertiesNames = Collections.list(message.getPropertyNames());
 		return getHeaders(message, propertiesNames);
 	}
 
-	private Enumeration<String> getProperties(TextMessage message) throws JMSException {
-		Enumeration<String> propertiesNames = message.getPropertyNames();
-		return propertiesNames;
-	}
-
-	private Map<String, Object> getHeaders(TextMessage message, Enumeration<String> propertiesNames)
+	private Map<String, Object> getHeaders(TextMessage message, List<String> propertiesNames)
 			throws JMSException {
 		Map<String, Object> headers = new HashMap<>();
-		while (propertiesNames.hasMoreElements()) {
-			String nextElement = propertiesNames.nextElement();
-			headers.put(nextElement, message.getStringProperty(nextElement));
+		for (String propertyName : propertiesNames) {
+			headers.put(propertyName, message.getStringProperty(propertyName));
 		}
 		return headers;
 	}

@@ -141,6 +141,13 @@ public class ActiveMqTopicListenerTest {
 
 	}
 
+	@Test
+	public void testStopListening() throws Exception {
+		tryToListen();
+		listener.listening = false;
+		listener.listen(messageReceiver);
+	}
+
 	private void tryToListen() {
 		try {
 			listener.listen(messageReceiver);
@@ -148,4 +155,5 @@ public class ActiveMqTopicListenerTest {
 			// Do nothing, in order to be able to stop infinite loop.
 		}
 	}
+
 }
