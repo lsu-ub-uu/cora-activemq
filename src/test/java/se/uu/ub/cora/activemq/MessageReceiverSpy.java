@@ -26,12 +26,12 @@ import se.uu.ub.cora.messaging.MessageReceiver;
 
 public class MessageReceiverSpy implements MessageReceiver {
 
-	public Map<String, Object> headers = new HashMap<String, Object>();
+	public Map<String, String> headers = new HashMap<String, String>();
 	public String message;
 	public int messagesReceived = 0;
 
 	@Override
-	public void receiveMessage(Map<String, Object> headers, String message) {
+	public void receiveMessage(Map<String, String> headers, String message) {
 		this.headers = headers;
 		this.message = message;
 		this.messagesReceived++;

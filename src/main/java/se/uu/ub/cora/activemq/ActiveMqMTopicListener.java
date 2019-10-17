@@ -90,7 +90,7 @@ public class ActiveMqMTopicListener implements MessageListener {
 		connection.start();
 		while (listening) {
 			TextMessage message = (TextMessage) consumer.receive();
-			Map<String, Object> headers = addPropertiesAsHeaders(message);
+			Map<String, String> headers = addPropertiesAsHeaders(message);
 			messageReceiver.receiveMessage(headers, message.getText());
 		}
 	}
@@ -101,15 +101,15 @@ public class ActiveMqMTopicListener implements MessageListener {
 		connectionFactory.setPassword(routingInfo.password);
 	}
 
-	private Map<String, Object> addPropertiesAsHeaders(TextMessage message) throws JMSException {
+	private Map<String, String> addPropertiesAsHeaders(TextMessage message) throws JMSException {
 		@SuppressWarnings("unchecked")
 		List<String> propertiesNames = Collections.list(message.getPropertyNames());
 		return getHeaders(message, propertiesNames);
 	}
 
-	private Map<String, Object> getHeaders(TextMessage message, List<String> propertiesNames)
+	private Map<String, String> getHeaders(TextMessage message, List<String> propertiesNames)
 			throws JMSException {
-		Map<String, Object> headers = new HashMap<>();
+		Map<String, String> headers = new HashMap<>();
 		for (String propertyName : propertiesNames) {
 			headers.put(propertyName, message.getStringProperty(propertyName));
 		}
