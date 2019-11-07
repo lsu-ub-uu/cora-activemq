@@ -37,9 +37,9 @@ public class ActiveMQMessagingFactoryTest {
 	@BeforeMethod
 	public void beforeMethod() {
 
-		String hostname = "messaging.alvin-portal.org";
-		String port = "5672";
-		String routingKey = "alvin.updates.#";
+		String hostname = "dev-diva-drafts";
+		String port = "61617";
+		String routingKey = "diva.updates.#";
 		String username = "admin";
 		String password = "admin";
 
