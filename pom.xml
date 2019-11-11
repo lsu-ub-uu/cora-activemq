@@ -28,7 +28,7 @@
 	<properties>
 		<messaging.version>2.1.0</messaging.version>
 		<logger.version>2.0.0</logger.version>
-		<activemq-client.version>5.9.0</activemq-client.version>
+		<activemq-client.version>5.15.9</activemq-client.version>
 		<activemq-openwire-legacy.version>5.15.10</activemq-openwire-legacy.version>
 		<javax.jms-api.version>2.0.1</javax.jms-api.version>
 	</properties>
