@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>se.uu.ub.cora</groupId>
 		<artifactId>cora-parent</artifactId>
-		<version>0.10-SNAPSHOT</version>
+		<version>1.0.2</version>
 	</parent>
 
 	<artifactId>activemq</artifactId>
@@ -26,10 +26,10 @@
 	<name>activemq</name>
 
 	<properties>
-		<messaging.version>1.1-SNAPSHOT</messaging.version>
-		<logger.version>1.0.0</logger.version>
-		<activemq-client.version>5.15.10</activemq-client.version>
-		<activemq-openwire-legacy.version>5.9.0</activemq-openwire-legacy.version>
+		<messaging.version>2.1.0</messaging.version>
+		<logger.version>2.0.0</logger.version>
+		<activemq-client.version>5.9.0</activemq-client.version>
+		<activemq-openwire-legacy.version>5.15.10</activemq-openwire-legacy.version>
 		<javax.jms-api.version>2.0.1</javax.jms-api.version>
 	</properties>
 
