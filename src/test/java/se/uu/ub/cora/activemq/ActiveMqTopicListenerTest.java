@@ -25,6 +25,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import javax.jms.Connection;
+import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Topic;
 
@@ -132,6 +133,16 @@ public class ActiveMqTopicListenerTest {
 	public void testThrowsExceptionOnListenMessage() throws Exception {
 		connectionFactory.throwError = true;
 		listener.listen(messageReceiver);
+	}
+
+	@Test
+	public void testThrowsExceptionOnListenMessageSendsAlongInitialException() throws Exception {
+		connectionFactory.throwError = true;
+		try {
+			listener.listen(messageReceiver);
+		} catch (Exception e) {
+			assertTrue(e.getCause() instanceof JMSException);
+		}
 	}
 
 	@Test

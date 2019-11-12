@@ -81,7 +81,7 @@ public class ActiveMqMTopicListener implements MessageListener {
 			MessageConsumer consumer = session.createConsumer(destination);
 			listenForMessages(messageReceiver, connection, consumer);
 		} catch (JMSException e) {
-			throw new MessagingInitializationException(e.getMessage());
+			throw new MessagingInitializationException(e.getMessage(), e);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class ActiveMqMTopicListener implements MessageListener {
 
 	private Map<String, String> getHeaders(TextMessage message, List<String> propertiesNames)
 			throws JMSException {
-		Map<String, String> headers = new HashMap<>();
+		Map<String, String> headers = new HashMap<>(propertiesNames.size());
 		for (String propertyName : propertiesNames) {
 			headers.put(propertyName, message.getStringProperty(propertyName));
 		}
