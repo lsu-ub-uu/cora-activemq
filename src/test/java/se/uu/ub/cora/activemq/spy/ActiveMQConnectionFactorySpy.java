@@ -26,6 +26,8 @@ import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+
 //public class ActiveMQConnectionFactorySpy implements ConnectionFactory {
 public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 
@@ -35,9 +37,23 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 	public String password = null;
 	public boolean throwError = false;
 
+	public MethodCallRecorder MCR = new MethodCallRecorder();
+
+	public ActiveMQConnectionFactorySpy() {
+		ifMCRisNotInitialized();
+	}
+
 	@Override
 	public void setBrokerURL(String brokerURL) {
+		ifMCRisNotInitialized();
+		MCR.addCall("brokerURL", brokerURL);
 		this.brokerURL = brokerURL;
+	}
+
+	private void ifMCRisNotInitialized() {
+		if (MCR == null) {
+			MCR = new MethodCallRecorder();
+		}
 	}
 
 	@Override
@@ -58,4 +74,11 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 		createdConnections.add(activeMqConnectionSpy);
 		return activeMqConnectionSpy;
 	}
+
+	@Override
+	public Connection createConnection(String userName, String password) throws JMSException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -42,6 +42,8 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
+import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+
 public class ActiveMqSessionSpy implements Session {
 
 	private boolean transacted = true;
@@ -49,6 +51,8 @@ public class ActiveMqSessionSpy implements Session {
 	public ActiveMqDestinationSpy destination = null;
 	public List<Object> createdConsumer = new ArrayList<>();
 	public ActiveMqConsumerSpy consumer;
+
+	public MethodCallRecorder MCR = new MethodCallRecorder();
 
 	@Override
 	public BytesMessage createBytesMessage() throws JMSException {
@@ -200,8 +204,12 @@ public class ActiveMqSessionSpy implements Session {
 
 	@Override
 	public Topic createTopic(String topicName) throws JMSException {
+		MCR.addCall("topicName", topicName);
+
 		destination = new ActiveMqDestinationSpy();
 		destination.setTopicName(topicName);
+
+		MCR.addReturned(destination);
 		return destination;
 	}
 
