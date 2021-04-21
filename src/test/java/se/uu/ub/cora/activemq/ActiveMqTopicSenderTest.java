@@ -13,7 +13,6 @@ import javax.jms.DeliveryMode;
 import javax.jms.Session;
 import javax.jms.Topic;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -190,20 +189,4 @@ public class ActiveMqTopicSenderTest {
 
 		messageProducer.MCR.assertParameters("send", 0, textMessage);
 	}
-
-	@Test
-	public void testCallSpike() {
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
-		ActiveMqTopicSender realSender = ActiveMqTopicSender
-				.usingActiveMQConnectionFactoryAndRoutingInfo(connectionFactory, routingInfo);
-		Map<String, Object> headers = new HashMap<>();
-		headers.put("pid", "authority-person:146");
-		headers.put("methodName", "addDataStream");
-		headers.put("from", "testNG");
-
-		String message = "Some message MaybeNow";
-
-		realSender.sendMessage(headers, message);
-	}
-
 }
