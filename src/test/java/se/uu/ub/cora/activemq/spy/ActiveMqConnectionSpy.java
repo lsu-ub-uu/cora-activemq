@@ -109,7 +109,7 @@ public class ActiveMqConnectionSpy implements Connection {
 
 	@Override
 	public void close() throws JMSException {
-		// TODO Auto-generated method stub
+		MCR.addCall();
 
 	}
 

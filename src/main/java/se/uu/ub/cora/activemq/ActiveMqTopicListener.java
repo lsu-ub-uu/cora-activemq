@@ -43,21 +43,22 @@ import se.uu.ub.cora.messaging.MessagingInitializationException;
  *
  */
 
-public class ActiveMqMTopicListener implements MessageListener {
+public class ActiveMqTopicListener implements MessageListener {
 
-	public static ActiveMqMTopicListener usingActiveMQConnectionFactoryAndRoutingInfo(
+	public static ActiveMqTopicListener usingActiveMQConnectionFactoryAndRoutingInfo(
 			ActiveMQConnectionFactory connectionFactory, JmsMessageRoutingInfo routingInfo) {
-		return new ActiveMqMTopicListener(connectionFactory, routingInfo);
+		return new ActiveMqTopicListener(connectionFactory, routingInfo);
 	}
 
 	private ActiveMQConnectionFactory connectionFactory;
 	private JmsMessageRoutingInfo routingInfo;
 	boolean listening = true;
 
-	private ActiveMqMTopicListener(ActiveMQConnectionFactory connectionFactory,
+	private ActiveMqTopicListener(ActiveMQConnectionFactory connectionFactory,
 			JmsMessageRoutingInfo routingInfo) {
 		this.connectionFactory = connectionFactory;
 		this.routingInfo = routingInfo;
+		setUpConnectionFactory();
 	}
 
 	/**
@@ -69,7 +70,6 @@ public class ActiveMqMTopicListener implements MessageListener {
 
 	@Override
 	public void listen(MessageReceiver messageReceiver) {
-		setUpConnectionFactory();
 		tryToListenForMessages(messageReceiver);
 	}
 

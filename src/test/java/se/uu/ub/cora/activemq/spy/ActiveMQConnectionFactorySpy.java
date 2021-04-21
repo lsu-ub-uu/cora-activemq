@@ -58,26 +58,31 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 
 	@Override
 	public void setUserName(String userName) {
+		MCR.addCall("userName", userName);
 		this.userName = userName;
 	}
 
 	@Override
 	public void setPassword(String password) {
+		MCR.addCall("password", password);
 		this.password = password;
 	}
 
 	@Override
 	public Connection createConnection() throws JMSException {
+		MCR.addCall();
+
 		if (throwError)
 			throw new JMSException("Error from ActiveMqTopicListenerSpy on newConnection");
 		ActiveMqConnectionSpy activeMqConnectionSpy = new ActiveMqConnectionSpy();
 		createdConnections.add(activeMqConnectionSpy);
+
+		MCR.addReturned(activeMqConnectionSpy);
 		return activeMqConnectionSpy;
 	}
 
 	@Override
 	public Connection createConnection(String userName, String password) throws JMSException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

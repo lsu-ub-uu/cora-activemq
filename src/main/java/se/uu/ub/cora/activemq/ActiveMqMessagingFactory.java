@@ -40,7 +40,7 @@ public class ActiveMqMessagingFactory implements MessagingFactory {
 
 	@Override
 	public MessageListener factorTopicMessageListener(MessageRoutingInfo messagingRoutingInfo) {
-		return ActiveMqMTopicListener.usingActiveMQConnectionFactoryAndRoutingInfo(new ActiveMQConnectionFactory(),
+		return ActiveMqTopicListener.usingActiveMQConnectionFactoryAndRoutingInfo(new ActiveMQConnectionFactory(),
 				(JmsMessageRoutingInfo) messagingRoutingInfo);
 	}
 

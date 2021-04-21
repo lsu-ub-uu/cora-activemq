@@ -22,16 +22,25 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Topic;
 
+import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+
 public class ActiveMqDestinationSpy implements Destination, Topic {
 
 	private String topicName;
 
+	MethodCallRecorder MCR = new MethodCallRecorder();
+
 	@Override
 	public String getTopicName() throws JMSException {
+		MCR.addCall();
+
+		MCR.addReturned(topicName);
 		return topicName;
 	}
 
 	void setTopicName(String topicName) {
+		MCR.addCall("topicName", topicName);
+
 		this.topicName = topicName;
 	}
 

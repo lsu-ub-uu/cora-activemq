@@ -45,7 +45,7 @@ public class ActiveMqTopicListenerTest {
 
 	private ActiveMQConnectionFactorySpy connectionFactory;
 	private JmsMessageRoutingInfo routingInfo;
-	private ActiveMqMTopicListener listener;
+	private ActiveMqTopicListener listener;
 	private MessageReceiverSpy messageReceiver;
 
 	@BeforeMethod
@@ -59,7 +59,7 @@ public class ActiveMqTopicListenerTest {
 
 		routingInfo = new JmsMessageRoutingInfo(hostname, port, routingKey, username, password);
 		connectionFactory = new ActiveMQConnectionFactorySpy();
-		listener = ActiveMqMTopicListener
+		listener = ActiveMqTopicListener
 				.usingActiveMQConnectionFactoryAndRoutingInfo(connectionFactory, routingInfo);
 		messageReceiver = new MessageReceiverSpy();
 	}

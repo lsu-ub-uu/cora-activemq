@@ -98,8 +98,11 @@ public class ActiveMqSessionSpy implements Session {
 
 	@Override
 	public TextMessage createTextMessage(String text) throws JMSException {
-		// TODO Auto-generated method stub
-		return null;
+		MCR.addCall("text", text);
+
+		TextMessage textMessage = new TextMessageSpy();
+		MCR.addReturned(textMessage);
+		return textMessage;
 	}
 
 	@Override
@@ -127,8 +130,7 @@ public class ActiveMqSessionSpy implements Session {
 
 	@Override
 	public void close() throws JMSException {
-		// TODO Auto-generated method stub
-
+		MCR.addCall();
 	}
 
 	@Override
@@ -157,8 +159,10 @@ public class ActiveMqSessionSpy implements Session {
 
 	@Override
 	public MessageProducer createProducer(Destination destination) throws JMSException {
-		// TODO Auto-generated method stub
-		return null;
+		MCR.addCall("destination", destination);
+		MessageProducerSpy messageProducer = new MessageProducerSpy();
+		MCR.addReturned(messageProducer);
+		return messageProducer;
 	}
 
 	@Override

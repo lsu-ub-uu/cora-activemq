@@ -26,9 +26,12 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
+import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+
 public class TextMessageSpy implements TextMessage {
 
 	public Map<String, Object> properties;
+	public MethodCallRecorder MCR = new MethodCallRecorder();
 
 	@Override
 	public String getJMSMessageID() throws JMSException {
@@ -288,14 +291,12 @@ public class TextMessageSpy implements TextMessage {
 
 	@Override
 	public void setStringProperty(String name, String value) throws JMSException {
-		// TODO Auto-generated method stub
-
+		MCR.addCall("name", name, "value", value);
 	}
 
 	@Override
 	public void setObjectProperty(String name, Object value) throws JMSException {
-		// TODO Auto-generated method stub
-
+		MCR.addCall("name", name, "value", value);
 	}
 
 	@Override

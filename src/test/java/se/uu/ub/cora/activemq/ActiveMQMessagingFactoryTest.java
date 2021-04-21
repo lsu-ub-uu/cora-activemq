@@ -55,7 +55,7 @@ public class ActiveMQMessagingFactoryTest {
 
 	@Test
 	public void testFactorTopicMessageListenerReturnsActiveMqTopicListener() throws Exception {
-		ActiveMqMTopicListener listener = (ActiveMqMTopicListener) factory
+		ActiveMqTopicListener listener = (ActiveMqTopicListener) factory
 				.factorTopicMessageListener(routingInfo);
 
 		assertTrue(listener instanceof MessageListener);
