@@ -32,7 +32,6 @@ import se.uu.ub.cora.messaging.MessagingFactory;
 
 public class ActiveMqMessagingFactory implements MessagingFactory {
 
-	// Not supported
 	@Override
 	public MessageSender factorTopicMessageSender(MessageRoutingInfo messagingRoutingInfo) {
 		return ActiveMqTopicSender.usingActiveMQConnectionFactoryAndRoutingInfo(
