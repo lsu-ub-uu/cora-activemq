@@ -36,6 +36,7 @@ import se.uu.ub.cora.activemq.spy.ActiveMQConnectionFactorySpy;
 import se.uu.ub.cora.activemq.spy.ActiveMqConnectionSpy;
 import se.uu.ub.cora.activemq.spy.ActiveMqConsumerSpy;
 import se.uu.ub.cora.activemq.spy.ActiveMqSessionSpy;
+import se.uu.ub.cora.activemq.spy.MessageReceiverSpy;
 import se.uu.ub.cora.messaging.JmsMessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessageListener;
 import se.uu.ub.cora.messaging.MessagingInitializationException;
@@ -44,7 +45,7 @@ public class ActiveMqTopicListenerTest {
 
 	private ActiveMQConnectionFactorySpy connectionFactory;
 	private JmsMessageRoutingInfo routingInfo;
-	private ActiveMqMTopicListener listener;
+	private ActiveMqTopicListener listener;
 	private MessageReceiverSpy messageReceiver;
 
 	@BeforeMethod
@@ -58,7 +59,7 @@ public class ActiveMqTopicListenerTest {
 
 		routingInfo = new JmsMessageRoutingInfo(hostname, port, routingKey, username, password);
 		connectionFactory = new ActiveMQConnectionFactorySpy();
-		listener = ActiveMqMTopicListener
+		listener = ActiveMqTopicListener
 				.usingActiveMQConnectionFactoryAndRoutingInfo(connectionFactory, routingInfo);
 		messageReceiver = new MessageReceiverSpy();
 	}
@@ -91,7 +92,7 @@ public class ActiveMqTopicListenerTest {
 	}
 
 	@Test
-	public void testListenerCreatsSession() throws Exception {
+	public void testListenerCreatesSession() throws Exception {
 		tryToListen();
 		ActiveMqConnectionSpy connection = connectionFactory.createdConnections.get(0);
 		assertEquals(connection.createdSession.size(), 1);

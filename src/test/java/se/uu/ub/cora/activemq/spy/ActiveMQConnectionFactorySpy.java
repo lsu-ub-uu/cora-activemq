@@ -26,6 +26,8 @@ import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+
 //public class ActiveMQConnectionFactorySpy implements ConnectionFactory {
 public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 
@@ -35,27 +37,53 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 	public String password = null;
 	public boolean throwError = false;
 
+	public MethodCallRecorder MCR = new MethodCallRecorder();
+
+	public ActiveMQConnectionFactorySpy() {
+		ifMCRisNotInitialized();
+	}
+
 	@Override
 	public void setBrokerURL(String brokerURL) {
+		ifMCRisNotInitialized();
+		MCR.addCall("brokerURL", brokerURL);
 		this.brokerURL = brokerURL;
+	}
+
+	private void ifMCRisNotInitialized() {
+		if (MCR == null) {
+			MCR = new MethodCallRecorder();
+		}
 	}
 
 	@Override
 	public void setUserName(String userName) {
+		MCR.addCall("userName", userName);
 		this.userName = userName;
 	}
 
 	@Override
 	public void setPassword(String password) {
+		MCR.addCall("password", password);
 		this.password = password;
 	}
 
 	@Override
 	public Connection createConnection() throws JMSException {
+		MCR.addCall();
+
 		if (throwError)
 			throw new JMSException("Error from ActiveMqTopicListenerSpy on newConnection");
 		ActiveMqConnectionSpy activeMqConnectionSpy = new ActiveMqConnectionSpy();
 		createdConnections.add(activeMqConnectionSpy);
+
+		MCR.addReturned(activeMqConnectionSpy);
 		return activeMqConnectionSpy;
 	}
+
+	@Override
+	public Connection createConnection(String userName, String password) throws JMSException {
+		return null;
+	}
+
 }

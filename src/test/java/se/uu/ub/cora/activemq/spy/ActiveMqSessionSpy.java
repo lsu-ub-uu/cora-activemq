@@ -42,6 +42,8 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
+import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+
 public class ActiveMqSessionSpy implements Session {
 
 	private boolean transacted = true;
@@ -49,6 +51,8 @@ public class ActiveMqSessionSpy implements Session {
 	public ActiveMqDestinationSpy destination = null;
 	public List<Object> createdConsumer = new ArrayList<>();
 	public ActiveMqConsumerSpy consumer;
+
+	public MethodCallRecorder MCR = new MethodCallRecorder();
 
 	@Override
 	public BytesMessage createBytesMessage() throws JMSException {
@@ -94,8 +98,11 @@ public class ActiveMqSessionSpy implements Session {
 
 	@Override
 	public TextMessage createTextMessage(String text) throws JMSException {
-		// TODO Auto-generated method stub
-		return null;
+		MCR.addCall("text", text);
+
+		TextMessage textMessage = new TextMessageSpy();
+		MCR.addReturned(textMessage);
+		return textMessage;
 	}
 
 	@Override
@@ -123,8 +130,7 @@ public class ActiveMqSessionSpy implements Session {
 
 	@Override
 	public void close() throws JMSException {
-		// TODO Auto-generated method stub
-
+		MCR.addCall();
 	}
 
 	@Override
@@ -153,8 +159,10 @@ public class ActiveMqSessionSpy implements Session {
 
 	@Override
 	public MessageProducer createProducer(Destination destination) throws JMSException {
-		// TODO Auto-generated method stub
-		return null;
+		MCR.addCall("destination", destination);
+		MessageProducerSpy messageProducer = new MessageProducerSpy();
+		MCR.addReturned(messageProducer);
+		return messageProducer;
 	}
 
 	@Override
@@ -200,8 +208,12 @@ public class ActiveMqSessionSpy implements Session {
 
 	@Override
 	public Topic createTopic(String topicName) throws JMSException {
+		MCR.addCall("topicName", topicName);
+
 		destination = new ActiveMqDestinationSpy();
 		destination.setTopicName(topicName);
+
+		MCR.addReturned(destination);
 		return destination;
 	}
 

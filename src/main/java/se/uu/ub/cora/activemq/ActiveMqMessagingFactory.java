@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Uppsala University Library
+ * Copyright 2019, 2021 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -35,13 +35,14 @@ public class ActiveMqMessagingFactory implements MessagingFactory {
 	// Not supported
 	@Override
 	public MessageSender factorTopicMessageSender(MessageRoutingInfo messagingRoutingInfo) {
-		throw new UnsupportedOperationException();
+		return ActiveMqTopicSender.usingActiveMQConnectionFactoryAndRoutingInfo(
+				new ActiveMQConnectionFactory(), (JmsMessageRoutingInfo) messagingRoutingInfo);
 	}
 
 	@Override
 	public MessageListener factorTopicMessageListener(MessageRoutingInfo messagingRoutingInfo) {
-		return ActiveMqMTopicListener.usingActiveMQConnectionFactoryAndRoutingInfo(new ActiveMQConnectionFactory(),
-				(JmsMessageRoutingInfo) messagingRoutingInfo);
+		return ActiveMqTopicListener.usingActiveMQConnectionFactoryAndRoutingInfo(
+				new ActiveMQConnectionFactory(), (JmsMessageRoutingInfo) messagingRoutingInfo);
 	}
 
 }

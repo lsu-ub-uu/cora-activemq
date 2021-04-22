@@ -32,19 +32,25 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 import javax.jms.Topic;
 
+import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+
 public class ActiveMqConnectionSpy implements Connection {
 
 	public boolean hasBeenStarted = false;
 	public List<ActiveMqSessionSpy> createdSession = new ArrayList<>();
 
+	public MethodCallRecorder MCR = new MethodCallRecorder();
+
 	@Override
 	public Session createSession(boolean transacted, int acknowledgeMode) throws JMSException {
+		MCR.addCall("transacted", transacted, "acknowledgeMode", acknowledgeMode);
 		ActiveMqSessionSpy activeMqSessionSpy = new ActiveMqSessionSpy();
 
 		activeMqSessionSpy.setTransacted(false);
 		activeMqSessionSpy.setAcknowledgeMode(1);
 		createdSession.add(activeMqSessionSpy);
 
+		MCR.addReturned(activeMqSessionSpy);
 		return activeMqSessionSpy;
 	}
 
@@ -103,7 +109,7 @@ public class ActiveMqConnectionSpy implements Connection {
 
 	@Override
 	public void close() throws JMSException {
-		// TODO Auto-generated method stub
+		MCR.addCall();
 
 	}
 

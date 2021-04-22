@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Uppsala University Library
+ * Copyright 2019, 2021 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,6 +18,7 @@
  */
 package se.uu.ub.cora.activemq;
 
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -26,7 +27,6 @@ import org.testng.annotations.Test;
 
 import se.uu.ub.cora.messaging.JmsMessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessageListener;
-import se.uu.ub.cora.messaging.MessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessagingFactory;
 
 public class ActiveMQMessagingFactoryTest {
@@ -55,16 +55,19 @@ public class ActiveMQMessagingFactoryTest {
 
 	@Test
 	public void testFactorTopicMessageListenerReturnsActiveMqTopicListener() throws Exception {
-		ActiveMqMTopicListener listener = (ActiveMqMTopicListener) factory
+		ActiveMqTopicListener listener = (ActiveMqTopicListener) factory
 				.factorTopicMessageListener(routingInfo);
 
 		assertTrue(listener instanceof MessageListener);
 		assertTrue(listener.getConnectionFactory() instanceof ActiveMQConnectionFactory);
-		assertTrue(listener.getRoutingInfo() instanceof MessageRoutingInfo);
+		assertSame(listener.getRoutingInfo(), routingInfo);
 	}
 
-	@Test(expectedExceptions = UnsupportedOperationException.class)
-	public void testName() throws Exception {
-		factory.factorTopicMessageSender(null);
+	@Test
+	public void testFactorTopicMessageSenderReturnsActiveMqTopicSender() throws Exception {
+		ActiveMqTopicSender sender = (ActiveMqTopicSender) factory
+				.factorTopicMessageSender(routingInfo);
+		assertTrue(sender.getConnectionFactory() instanceof ActiveMQConnectionFactory);
+		assertSame(sender.getRoutingInfo(), routingInfo);
 	}
 }
