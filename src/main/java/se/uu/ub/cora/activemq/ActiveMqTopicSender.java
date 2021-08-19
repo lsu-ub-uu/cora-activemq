@@ -3,16 +3,15 @@ package se.uu.ub.cora.activemq;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.jms.Connection;
-import javax.jms.DeliveryMode;
-import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-
+import jakarta.jms.Connection;
+import jakarta.jms.DeliveryMode;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
+import jakarta.jms.Topic;
 import se.uu.ub.cora.messaging.JmsMessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessageSender;
 import se.uu.ub.cora.messaging.MessagingInitializationException;
@@ -37,8 +36,13 @@ public class ActiveMqTopicSender implements MessageSender {
 	}
 
 	private void setupConnectionFactory() {
-		connectionFactory.setBrokerURL(buildBrokerURLFromRoutingInfo(routingInfo));
-		connectionFactory.setUserName(routingInfo.username);
+		try {
+			connectionFactory.setBrokerURL(buildBrokerURLFromRoutingInfo(routingInfo));
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		connectionFactory.setUser(routingInfo.username);
 		connectionFactory.setPassword(routingInfo.password);
 	}
 

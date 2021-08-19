@@ -23,15 +23,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-
+import jakarta.jms.Connection;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 import se.uu.ub.cora.messaging.JmsMessageRoutingInfo;
 import se.uu.ub.cora.messaging.MessageListener;
 import se.uu.ub.cora.messaging.MessageReceiver;
@@ -59,6 +58,7 @@ public class ActiveMqTopicListener implements MessageListener {
 		this.connectionFactory = connectionFactory;
 		this.routingInfo = routingInfo;
 		setUpConnectionFactory();
+
 	}
 
 	/**
@@ -96,8 +96,14 @@ public class ActiveMqTopicListener implements MessageListener {
 	}
 
 	private void setUpConnectionFactory() {
-		connectionFactory.setBrokerURL("tcp://" + routingInfo.hostname + ":" + routingInfo.port);
-		connectionFactory.setUserName(routingInfo.username);
+		try {
+			connectionFactory
+					.setBrokerURL("tcp://" + routingInfo.hostname + ":" + routingInfo.port);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		connectionFactory.setUser(routingInfo.username);
 		connectionFactory.setPassword(routingInfo.password);
 	}
 

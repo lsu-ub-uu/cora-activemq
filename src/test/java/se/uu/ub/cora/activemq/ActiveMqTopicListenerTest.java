@@ -24,14 +24,13 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Topic;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.Topic;
 import se.uu.ub.cora.activemq.spy.ActiveMQConnectionFactorySpy;
 import se.uu.ub.cora.activemq.spy.ActiveMqConnectionSpy;
 import se.uu.ub.cora.activemq.spy.ActiveMqConsumerSpy;

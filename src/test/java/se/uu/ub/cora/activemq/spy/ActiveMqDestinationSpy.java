@@ -18,10 +18,9 @@
  */
 package se.uu.ub.cora.activemq.spy;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Topic;
-
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Topic;
 import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
 
 public class ActiveMqDestinationSpy implements Destination, Topic {

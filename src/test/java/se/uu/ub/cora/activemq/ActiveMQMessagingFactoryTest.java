@@ -21,7 +21,7 @@ package se.uu.ub.cora.activemq;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

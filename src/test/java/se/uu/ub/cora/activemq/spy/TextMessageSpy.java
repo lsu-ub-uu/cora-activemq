@@ -22,10 +22,9 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
 import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
 
 public class TextMessageSpy implements TextMessage {
@@ -79,30 +78,6 @@ public class TextMessageSpy implements TextMessage {
 	public String getJMSCorrelationID() throws JMSException {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Destination getJMSReplyTo() throws JMSException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setJMSReplyTo(Destination replyTo) throws JMSException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Destination getJMSDestination() throws JMSException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setJMSDestination(Destination destination) throws JMSException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -332,6 +307,30 @@ public class TextMessageSpy implements TextMessage {
 	@Override
 	public String getText() throws JMSException {
 		return "Text from TextMessageSpy";
+	}
+
+	@Override
+	public Destination getJMSReplyTo() throws JMSException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setJMSReplyTo(Destination replyTo) throws JMSException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Destination getJMSDestination() throws JMSException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setJMSDestination(Destination destination) throws JMSException {
+		// TODO Auto-generated method stub
+
 	}
 
 }

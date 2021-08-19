@@ -1,11 +1,10 @@
 package se.uu.ub.cora.activemq.spy;
 
-import javax.jms.CompletionListener;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageProducer;
-
+import jakarta.jms.CompletionListener;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.MessageProducer;
 import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
 
 public class MessageProducerSpy implements MessageProducer {

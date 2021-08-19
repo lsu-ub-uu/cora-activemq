@@ -21,14 +21,12 @@ package se.uu.ub.cora.activemq.spy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
 import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
 
-//public class ActiveMQConnectionFactorySpy implements ConnectionFactory {
 public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 
 	public List<ActiveMqConnectionSpy> createdConnections = new ArrayList<>();
@@ -57,15 +55,17 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 	}
 
 	@Override
-	public void setUserName(String userName) {
+	public ActiveMQConnectionFactory setUser(String userName) {
 		MCR.addCall("userName", userName);
 		this.userName = userName;
+		return this;
 	}
 
 	@Override
-	public void setPassword(String password) {
+	public ActiveMQConnectionFactory setPassword(String password) {
 		MCR.addCall("password", password);
 		this.password = password;
+		return this;
 	}
 
 	@Override
@@ -79,6 +79,7 @@ public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {
 
 		MCR.addReturned(activeMqConnectionSpy);
 		return activeMqConnectionSpy;
+
 	}
 
 	@Override
