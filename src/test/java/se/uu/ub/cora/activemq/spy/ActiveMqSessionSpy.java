@@ -42,7 +42,7 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
-import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 
 public class ActiveMqSessionSpy implements Session {
 

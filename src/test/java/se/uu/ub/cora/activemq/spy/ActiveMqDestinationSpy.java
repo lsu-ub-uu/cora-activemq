@@ -22,7 +22,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Topic;
 
-import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 
 public class ActiveMqDestinationSpy implements Destination, Topic {
 

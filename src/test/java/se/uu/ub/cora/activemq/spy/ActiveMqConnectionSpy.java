@@ -32,7 +32,7 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 import javax.jms.Topic;
 
-import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 
 public class ActiveMqConnectionSpy implements Connection {
 

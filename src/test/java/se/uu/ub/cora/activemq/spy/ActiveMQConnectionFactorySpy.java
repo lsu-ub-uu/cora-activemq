@@ -26,7 +26,7 @@ import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 
 //public class ActiveMQConnectionFactorySpy implements ConnectionFactory {
 public class ActiveMQConnectionFactorySpy extends ActiveMQConnectionFactory {

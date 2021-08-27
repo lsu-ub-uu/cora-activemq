@@ -6,7 +6,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 
-import se.uu.ub.cora.activemq.mcr.MethodCallRecorder;
+import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 
 public class MessageProducerSpy implements MessageProducer {
 
