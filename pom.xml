@@ -28,10 +28,10 @@
 	<properties>
 		<messaging.version>2.6.0</messaging.version>
 		<logger.version>2.5.0</logger.version>
-		<activemq-client.version>5.17.0</activemq-client.version>
-		<activemq-openwire-legacy.version>5.17.0</activemq-openwire-legacy.version>
+		<activemq-client.version>5.17.2</activemq-client.version>
+		<activemq-openwire-legacy.version>5.17.2</activemq-openwire-legacy.version>
 		<javax.jms-api.version>2.0.1</javax.jms-api.version>
-		<testutils.version>1.4.0</testutils.version>
+		<testutils.version>1.6.0</testutils.version>
 	</properties>
 
 	<scm>
