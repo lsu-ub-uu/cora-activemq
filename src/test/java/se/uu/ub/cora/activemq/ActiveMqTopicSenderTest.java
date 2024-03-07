@@ -8,14 +8,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.jms.Connection;
-import javax.jms.DeliveryMode;
-import javax.jms.Session;
-import javax.jms.Topic;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jakarta.jms.Connection;
+import jakarta.jms.DeliveryMode;
+import jakarta.jms.Session;
+import jakarta.jms.Topic;
 import se.uu.ub.cora.activemq.spy.ActiveMQConnectionFactorySpy;
 import se.uu.ub.cora.activemq.spy.ActiveMqConnectionSpy;
 import se.uu.ub.cora.activemq.spy.ActiveMqDestinationSpy;
@@ -38,7 +37,7 @@ public class ActiveMqTopicSenderTest {
 	public void beforeMethod() {
 
 		String hostname = "diva-docker-fedora";
-		String port = "61616";
+		int port = 61616;
 		String routingKey = "fedora.apim.update";
 		String username = "fedoraAdmin";
 		String password = "changeit";

@@ -21,11 +21,10 @@ package se.uu.ub.cora.activemq.spy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 
 //public class ActiveMQConnectionFactorySpy implements ConnectionFactory {

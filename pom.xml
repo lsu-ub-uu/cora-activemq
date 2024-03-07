@@ -26,11 +26,11 @@
 	<name>activemq</name>
 
 	<properties>
-		<messaging.version>2.11.0</messaging.version>
+		<messaging.version>3.0.0</messaging.version>
 		<logger.version>2.10.0</logger.version>
-		<activemq-client.version>5.18.2</activemq-client.version>
-		<activemq-openwire-legacy.version>5.18.2</activemq-openwire-legacy.version>
-		<javax.jms-api.version>2.0.1</javax.jms-api.version>
+		<activemq-client.version>6.0.1</activemq-client.version>
+		<activemq-openwire-legacy.version>6.0.1</activemq-openwire-legacy.version>
+		<jakarta.jms-api.version>3.1.0</jakarta.jms-api.version>
 		<testutils.version>1.11.0</testutils.version>
 	</properties>
 
@@ -83,9 +83,9 @@
 			<version>${activemq-openwire-legacy.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.jms</groupId>
-			<artifactId>javax.jms-api</artifactId>
-			<version>${javax.jms-api.version}</version>
+			<groupId>jakarta.jms</groupId>
+			<artifactId>jakarta.jms-api</artifactId>
+			<version>${jakarta.jms-api.version}</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -22,10 +22,9 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 
 public class TextMessageSpy implements TextMessage {

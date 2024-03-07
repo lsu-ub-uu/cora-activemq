@@ -38,7 +38,7 @@ public class ActiveMQMessagingFactoryTest {
 	public void beforeMethod() {
 
 		String hostname = "dev-diva-drafts";
-		String port = "61617";
+		int port = 61617;
 		String routingKey = "diva.updates.#";
 		String username = "admin";
 		String password = "admin";
